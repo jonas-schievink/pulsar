@@ -1,0 +1,55 @@
+[package]
+name = "pa-proto"
+version = "0.1.0"
+authors = ["Jonas Schievink <jonasschievink@gmail.com>"]
+description = "Implementation of PulseAudio's \"native\" protocol"
+documentation = "https://docs.rs/pulsar/"
+repository = "https://github.com/jonas-schievink/pulsar.git"
+keywords = ["audio", "pulseaudio", "linux", "native", "pulse"]
+categories = ["multimedia", "network-programming"]
+readme = "../README.md"
+license = "CC0-1.0"
+
+[dependencies]
+log = "0.4.1"
+serde = "1.0.66"
+serde_derive = "1.0.66"
+bincode = "1.0.0"
+byteorder = "1.2.3"
+num-traits = "0.2"
+num-derive = "0.2"
+rand = "0.5.0"
+failure = "0.1.1"
+bitflags = "1.0.3"
+tokio-codec = "0.1.0"
+bytes = "0.4.8"
+# bin-only:
+env_logger = "0.5.10"
+tempfile = "3.0.2"
+nix = { git = "https://github.com/nix-rust/nix.git", rev = "eef3a432d57e8f830e05fede6e3099dcb689aa6b" }
+
+
+# cargo-release configuration
+[package.metadata.release]
+tag-message = "{{version}}"
+no-dev-version = true
+pre-release-commit-message = "Release {{version}}"
+
+# Change the changelog's `Unreleased` section to refer to this release and
+# prepend new `Unreleased` section
+[[package.metadata.release.pre-release-replacements]]
+file    = "CHANGELOG.md"
+search  = "## Unreleased"
+replace = "## Unreleased\n\nNo changes.\n\n## {{version}} - {{date}}"
+
+# Bump the version inside the example manifest in `README.md`
+[[package.metadata.release.pre-release-replacements]]
+file    = "README.md"
+search  = 'pulsar = "[a-z0-9\\.-]+"'
+replace = 'pulsar = "{{version}}"'
+
+# Bump the version referenced by the `html_root_url` attribute in `lib.rs`
+[[package.metadata.release.pre-release-replacements]]
+file    = "src/lib.rs"
+search  = "https://docs.rs/pulsar/[a-z0-9\\.-]+"
+replace = "https://docs.rs/pulsar/{{version}}"
